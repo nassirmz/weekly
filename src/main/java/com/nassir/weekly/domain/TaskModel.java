@@ -21,7 +21,7 @@ public class TaskModel {
     @Column(name = "points")
     private short points;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "task_day",
             joinColumns = @JoinColumn(name="task_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="day_id", referencedColumnName = "id"))
