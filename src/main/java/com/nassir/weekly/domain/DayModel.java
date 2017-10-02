@@ -15,12 +15,28 @@ import java.time.DayOfWeek;
 public class DayModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "day_id")
     private int id;
 
+    private int minutes;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "day")
     private DayOfWeek day;
+
+    public DayModel() {
+    }
+
+    public DayModel(int minutes, DayOfWeek day, Set<TaskModel> tasks) {
+        this.minutes = minutes;
+        this.day = day;
+        this.tasks = tasks;
+    }
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JsonBackReference
+    @JoinTable(name = "task_day",
+            joinColumns = @JoinColumn(name="day_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="task_id", referencedColumnName = "id"))
+    private Set<TaskModel> tasks = new HashSet<TaskModel>();
 
     public int getId() {
         return id;
@@ -28,6 +44,14 @@ public class DayModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
     }
 
     public DayOfWeek getDay() {
@@ -38,18 +62,13 @@ public class DayModel {
         this.day = day;
     }
 
-    public Set<TaskModel> getTasks() {
-        return tasks;
-    }
-
     public void setTasks(Set<TaskModel> tasks) {
         this.tasks = tasks;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JsonBackReference
-    @JoinTable(name = "task_day",
-            joinColumns = @JoinColumn(name="day_id", referencedColumnName = "day_id"),
-            inverseJoinColumns = @JoinColumn(name="task_id", referencedColumnName = "task_id"))
-    private Set<TaskModel> tasks = new HashSet<TaskModel>();
+
+    public Set<TaskModel> getTasks() {
+        return tasks;
+    }
+
 }

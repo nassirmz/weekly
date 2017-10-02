@@ -13,30 +13,34 @@ public class TaskModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "task_id")
     private int id;
 
     @Column(name = "task_name")
     private String taskName;
 
+    @Column(name = "points")
+    private short points;
+
     @ManyToMany
     @JoinTable(name = "task_day",
-            joinColumns = @JoinColumn(name="task_id", referencedColumnName = "task_id"),
-            inverseJoinColumns = @JoinColumn(name="day_id", referencedColumnName = "day_id"))
+            joinColumns = @JoinColumn(name="task_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="day_id", referencedColumnName = "id"))
     private Set<DayModel> days = new HashSet<DayModel>();
 
     public TaskModel() {
     }
 
-    public TaskModel(String taskName) {
+    public TaskModel(String taskName, short points, Set<DayModel> days) {
         this.taskName = taskName;
+        this.points = points;
+        this.days = days;
     }
 
-    public int getTask_id() {
+    public int getId() {
         return id;
     }
 
-    public void setTask_id(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -46,6 +50,14 @@ public class TaskModel {
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
+    }
+
+    public short getPoints() {
+        return points;
+    }
+
+    public void setPoints(short points) {
+        this.points = points;
     }
 
     public Set<DayModel> getDays() {
