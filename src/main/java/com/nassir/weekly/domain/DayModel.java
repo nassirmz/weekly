@@ -25,6 +25,11 @@ public class DayModel {
     public DayModel() {
     }
 
+    public DayModel(int minutes, DayOfWeek day) {
+        this.minutes = minutes;
+        this.day = day;
+    }
+
     public DayModel(int minutes, DayOfWeek day, Set<TaskModel> tasks) {
         this.minutes = minutes;
         this.day = day;
@@ -65,7 +70,6 @@ public class DayModel {
     public void setTasks(Set<TaskModel> tasks) {
         this.tasks = tasks;
     }
-
 
     public Set<TaskModel> getTasks() {
         return tasks;
