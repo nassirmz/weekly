@@ -1,29 +1,21 @@
 package com.nassir.weekly.dto;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.DayOfWeek;
 
 public class TaskDTO {
     private String taskName;
     private short points;
-
-    public Set<DayDTO> getDays() {
-        return days;
-    }
-
-    public void setDays(Set<DayDTO> days) {
-        this.days = days;
-    }
-
-    private Set<DayDTO> days = new HashSet<DayDTO>();
+    private short finishedPoints = 0;
+    private DayOfWeek day;
 
     public TaskDTO() {
     }
 
-    public TaskDTO(String taskName, short points, Set<DayDTO> days) {
+    public TaskDTO(String taskName, short points, short finishedPoints, DayOfWeek day) {
         this.taskName = taskName;
         this.points = points;
-        this.days = days;
+        this.finishedPoints = finishedPoints;
+        this.day = day;
     }
 
     public String getTaskName() {
@@ -42,5 +34,19 @@ public class TaskDTO {
         this.points = points;
     }
 
+    public short getFinishedPoints() {
+        return finishedPoints;
+    }
 
+    public void setFinishedPoints(short finishedPoints) {
+        this.finishedPoints = finishedPoints;
+    }
+
+    public DayOfWeek getDay() {
+        return day;
+    }
+
+    public void setDay(DayOfWeek day) {
+        this.day = day;
+    }
 }

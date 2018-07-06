@@ -1,39 +1,36 @@
 package com.nassir.weekly.domain;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.DayOfWeek;
 
-/**
- * Created by nassir on 9/21/17.
- */
+
 @Entity
 @Table(name = "tasks")
 public class TaskModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "task_name")
     private String taskName;
 
     @Column(name = "points")
-    private short points;
+    private short points = 1;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "task_day",
-            joinColumns = @JoinColumn(name="task_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name="day_id", referencedColumnName = "id"))
-    private Set<DayModel> days = new HashSet<DayModel>();
+    @Column(name = "finished_points")
+    private short finishedPoints = 0;
+
+    private DayOfWeek day;
 
     public TaskModel() {
     }
 
-    public TaskModel(String taskName, short points, Set<DayModel> days) {
+    public TaskModel(String taskName, short points, short finishedPoints, DayOfWeek day) {
         this.taskName = taskName;
         this.points = points;
-        this.days = days;
+        this.finishedPoints = finishedPoints;
+        this.day = day;
     }
 
     public int getId() {
@@ -60,11 +57,19 @@ public class TaskModel {
         this.points = points;
     }
 
-    public Set<DayModel> getDays() {
-        return days;
+    public short getFinishedPoints() {
+        return finishedPoints;
     }
 
-    public void setDays(Set<DayModel> days) {
-        this.days = days;
+    public void setFinishedPoints(short finishedPoints) {
+        this.finishedPoints = finishedPoints;
+    }
+
+    public DayOfWeek getDay() {
+        return day;
+    }
+
+    public void setDay(DayOfWeek day) {
+        this.day = day;
     }
 }

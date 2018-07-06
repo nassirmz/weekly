@@ -2,51 +2,74 @@ package com.nassir.weekly.controller;
 
 import com.nassir.weekly.domain.TaskModel;
 import com.nassir.weekly.dto.TaskDTO;
-import com.nassir.weekly.repository.TasksRepository;
-import com.nassir.weekly.transformer.TasksTranformer;
-import org.modelmapper.ModelMapper;
+import com.nassir.weekly.dto.TaskRequestDTO;
+import com.nassir.weekly.service.TaskService;
+import com.nassir.weekly.transformer.TaskTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 @RestController
+@RequestMapping("/api")
 public class TaskController {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
+
+    private TaskService taskService;
+    private TaskTransformer taskTransformer;
+
     @Autowired
-    private TasksRepository tasksRepository;
+    public TaskController(TaskService taskService, TaskTransformer taskTransformer) {
+        this.taskService = taskService;
+        this.taskTransformer = taskTransformer;
+    }
 
-    private ModelMapper modelMapper = new ModelMapper();
-
-    private TasksTranformer tasksTranformer = new TasksTranformer();
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping("/tasks")
     public List<TaskDTO> getTasks() {
         List<TaskDTO> tasks = new ArrayList<>();
-        for (TaskModel taskModel : tasksRepository.findAll()) {
-            tasks.add(tasksTranformer.tranform(taskModel));
+        for (TaskModel taskModel : taskService.checkGetTasks()) {
+            tasks.add(taskTransformer.transformTaskResponse(taskModel));
         }
         return tasks;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping(value = "/tasks", method = RequestMethod.POST)
-    public ResponseEntity <String> persistTask(@RequestBody TaskDTO task) {
-        TaskModel taskModel = modelMapper.map(task, TaskModel.class);
-        
-        tasksRepository.save(taskModel);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity persistTask(@RequestBody TaskRequestDTO taskRequestDTO) {
+
+        TaskDTO taskDTO = taskRequestDTO.getTask();
+
+        List<TaskDTO> taskDTOS = new ArrayList<>();
+        System.out.println(taskRequestDTO.isWeeklyTask());
+        if (taskRequestDTO.isWeeklyTask() == false) {
+            TaskModel taskModel = taskTransformer.transformTaskRequest(taskDTO);
+            taskService.checkPostTask(taskModel);
+            taskDTOS.add(taskDTO);
+            return ResponseEntity.ok(taskDTOS);
+        } else {
+            List<TaskModel> taskModels = taskTransformer.transformTaskAllWeekRequest(taskDTO);
+            System.out.println(taskModels);
+            for (TaskModel taskModel: taskModels) {
+                taskService.checkPostTask((taskModel));
+                taskDTOS.add(taskTransformer.transformTaskResponse(taskModel));
+            }
+
+            return ResponseEntity.ok(taskDTOS);
+        }
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping(value = "/tasks", method = RequestMethod.DELETE)
     public ResponseEntity <String> deleteAllTasks() {
-        tasksRepository.deleteAll();
+        taskService.checkDeleteTasks();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
