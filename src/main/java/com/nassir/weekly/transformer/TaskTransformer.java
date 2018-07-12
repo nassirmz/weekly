@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class TaskTransformer {
     public TaskDTO transformTaskResponse(TaskModel taskModel) {
-        return new TaskDTO(taskModel.getTaskName(), taskModel.getPoints(), taskModel.getFinishedPoints(), taskModel.getDay());
+        return new TaskDTO(taskModel.getId(), taskModel.getTaskName(), taskModel.getPoints(), taskModel.getFinishedPoints(), taskModel.getDay());
     }
 
     public TaskModel transformTaskRequest(TaskDTO task) {

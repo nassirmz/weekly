@@ -50,9 +50,10 @@ public class TaskController {
         List<TaskDTO> taskDTOS = new ArrayList<>();
         System.out.println(taskRequestDTO.isWeeklyTask());
         if (taskRequestDTO.isWeeklyTask() == false) {
-            TaskModel taskModel = taskTransformer.transformTaskRequest(taskDTO);
-            taskService.checkPostTask(taskModel);
-            taskDTOS.add(taskDTO);
+            TaskModel taskModelRequest = taskTransformer.transformTaskRequest(taskDTO);
+            TaskModel taskModelResponse = taskService.checkPostTask(taskModelRequest);
+
+            taskDTOS.add(taskTransformer.transformTaskResponse(taskModelResponse));
             return ResponseEntity.ok(taskDTOS);
         } else {
             List<TaskModel> taskModels = taskTransformer.transformTaskAllWeekRequest(taskDTO);
@@ -70,6 +71,7 @@ public class TaskController {
     @RequestMapping(value = "/tasks", method = RequestMethod.DELETE)
     public ResponseEntity <String> deleteAllTasks() {
         taskService.checkDeleteTasks();
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

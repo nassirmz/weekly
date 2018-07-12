@@ -3,6 +3,7 @@ package com.nassir.weekly.dto;
 import java.time.DayOfWeek;
 
 public class TaskDTO {
+    private int taskId;
     private String taskName;
     private short points;
     private short finishedPoints = 0;
@@ -11,11 +12,20 @@ public class TaskDTO {
     public TaskDTO() {
     }
 
-    public TaskDTO(String taskName, short points, short finishedPoints, DayOfWeek day) {
+    public TaskDTO(int taskId, String taskName, short points, short finishedPoints, DayOfWeek day) {
+        this.taskId = taskId;
         this.taskName = taskName;
         this.points = points;
         this.finishedPoints = finishedPoints;
         this.day = day;
+    }
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 
     public String getTaskName() {

@@ -23,8 +23,7 @@ public class TaskService {
     }
 
     public TaskModel checkPostTask(TaskModel taskModel) {
-        tasksRepository.save(taskModel);
-        return taskModel;
+        return tasksRepository.save(taskModel);
     }
 
     public Collection<TaskModel> checkGetTasks() {
